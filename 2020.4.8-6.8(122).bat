@@ -12,6 +12,7 @@ set verbs[6]=create
 set verbs[7]=implement
 set verbs[8]=cleanup
 set verbs[9]=improve
+
 set words[10]=river
 set words[11]=ember
 set words[12]=vortex
@@ -53,36 +54,37 @@ set words[47]=comet
 set words[48]=shard
 set words[49]=aurorae
 
-:: verbs for realistic commit messages
-
-
 set year=2020
-set month=2
-set day=15
 
-for /L %%i in (1,1,324) do (
+for /L %%i in (1,1,122) do (
 
-    set /a r=!random! %% 50
+    set /a r=!random! %% 40 + 10
     set /a v=!random! %% 10
+
     call set word=%%words[!r!]%%
     call set verb=%%verbs[!v!]%%
 
-    if %%i==324 (
-        set msg= final commit
+    if %%i==122 (
+        set msg=final commit
     ) else (
         set msg=!verb! !word!
     )
 
-    set /a offset=!random! %% 51
-    if !offset! LSS 15 (
-        set month=2
-        set /a day=15 + offset
-    ) else if !offset! LSS 46 (
-        set month=3
-        set /a day=offset - 14
-    ) else (
+    :: Random day between Apr 8 and Jun 8 (62 days)
+    set /a offset=!random! %% 62
+
+    if !offset! LSS 23 (
+        rem Apr 8-30
         set month=4
-        set /a day=offset - 45
+        set /a day=8 + offset
+    ) else if !offset! LSS 54 (
+        rem May 1-31
+        set month=5
+        set /a day=offset - 22
+    ) else (
+        rem Jun 1-8
+        set month=6
+        set /a day=offset - 53
     )
 
     set /a hour=!random! %% 24
@@ -104,5 +106,5 @@ for /L %%i in (1,1,324) do (
 
     git commit -m "!msg!" --date "!commitdate!"
 
-    echo %%i / 324 - !msg! - !commitdate!
+    echo %%i / 122 - !msg! - !commitdate!
 )
